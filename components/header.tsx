@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/mode-toggle";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
-import { animate } from "animejs";
+import anime from "animejs";
 
 const navItems = [
 	{ name: "Home", href: "/" },
@@ -34,11 +34,11 @@ export default function Header() {
 
 	useEffect(() => {
 		if (isOpen) {
-			animate(".mobile-nav-item", {
+			anime({
+				targets: ".mobile-nav-item",
 				translateX: [20, 0],
 				opacity: [0, 1],
-				stagger: 100,
-				delay: 100,
+				delay: anime.stagger(100, { start: 100 }),
 				easing: "easeOutQuad",
 			});
 		}
@@ -86,9 +86,9 @@ export default function Header() {
 								<span className="sr-only">Toggle menu</span>
 							</Button>
 						</SheetTrigger>
-						<SheetContent side="right" className="w-[300px] sm:w-[400px]">
+						<SheetContent side="right" className="w-[300px] sm:w-[400px] px-6">
 							<div className="flex flex-col space-y-4 mt-8">
-								{navItems.map((item, index) => (
+								{navItems.map((item) => (
 									<Link
 										key={item.name}
 										href={item.href}

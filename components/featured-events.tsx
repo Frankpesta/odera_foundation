@@ -3,7 +3,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { MapPin, ArrowRight } from "lucide-react";
-import { getEvents } from "@/app/actions/events";
+import { getEvents } from "@/actions/events";
 import { format } from "date-fns";
 
 export async function FeaturedEvents() {

@@ -4,7 +4,7 @@ import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
 import { Moon, Sun } from "lucide-react";
 import { useEffect, useState } from "react";
-import { animate } from "animejs";
+import anime from "animejs";
 
 interface ThemeToggleProps {
 	className?: string;
@@ -22,7 +22,8 @@ export function ThemeToggle({ className }: ThemeToggleProps) {
 		const newTheme = theme === "dark" ? "light" : "dark";
 
 		// Animate theme transition
-		animate(".theme-toggle-icon", {
+		anime({
+			targets: ".theme-toggle-icon",
 			rotate: [0, 360],
 			scale: [1, 0.5, 1],
 			duration: 500,

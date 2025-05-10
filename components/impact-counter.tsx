@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { animate } from "animejs";
+import anime from "animejs"; // Correct import for latest animejs
 
 interface ImpactCounterProps {
 	end: number;
@@ -14,7 +14,6 @@ export default function ImpactCounter({
 	duration = 2000,
 	formatter = (value) => value.toLocaleString(),
 }: ImpactCounterProps) {
-	const [count, setCount] = useState(0);
 	const countRef = useRef<HTMLSpanElement>(null);
 	const hasAnimated = useRef(false);
 
@@ -24,16 +23,17 @@ export default function ImpactCounter({
 				if (entries[0].isIntersecting && !hasAnimated.current) {
 					hasAnimated.current = true;
 
-					animate(countRef, {
-						innerHTML: [0, end],
+					const animatedObj = { value: 0 };
+					anime({
+						targets: animatedObj, // Animate a plain object
+						value: end,
 						easing: "easeInOutExpo",
 						duration: duration,
 						round: 1,
-						update: (anim: any) => {
+						update: () => {
 							if (countRef.current) {
-								countRef.current.innerHTML = formatter(
-									Math.floor(anim.animations[0].currentValue)
-								);
+								const currentValue = Math.floor(animatedObj.value);
+								countRef.current.innerHTML = formatter(currentValue);
 							}
 						},
 					});
