@@ -1,6 +1,7 @@
 // app/api/uploadthing/core.ts
 import { createUploadthing, type FileRouter } from "uploadthing/next";
-
+import {} from "@/db/db"; // Import your database connection if needed
+import {} from "@/db/schema"; // Import your schema if needed
 const f = createUploadthing();
 
 const auth = (req: Request) => ({ id: "fakeId" }); // Fake auth function
@@ -20,7 +21,7 @@ export const ourFileRouter = {
 		})
 		.onUploadComplete(async ({ metadata, file }) => {
 			console.log("Upload complete for userId:", metadata.userId);
-			console.log("file url", file.url);
+			console.log("file url", file.ufsUrl);
 		}),
 
 	// New endpoint for eventImage
@@ -37,7 +38,7 @@ export const ourFileRouter = {
 		})
 		.onUploadComplete(async ({ metadata, file }) => {
 			console.log("Upload complete for userId:", metadata.userId);
-			console.log("file url", file.url);
+			console.log("file url", file.ufsUrl);
 		}),
 } satisfies FileRouter;
 

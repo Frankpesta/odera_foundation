@@ -82,11 +82,7 @@ export default function RootLayout({
 					defaultTheme="system"
 					enableSystem
 					disableTransitionOnChange>
-					<div className="flex min-h-screen flex-col">
-						<Header />
-						<main className="flex-1">{children}</main>
-						<Footer />
-					</div>
+					<div className="">{children}</div>
 					<Toaster />
 				</ThemeProvider>
 			</body>

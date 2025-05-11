@@ -73,7 +73,7 @@ export default function UltimateHero() {
 	return (
 		<section
 			ref={heroRef}
-			className="relative h-screen w-full overflow-hidden bg-gradient-to-br from-emerald-950 via-emerald-900 to-teal-800">
+			className="relative h-[130vh] md:h-screen w-full overflow-hidden">
 			{/* Interactive Background */}
 			<InteractiveBackground />
 

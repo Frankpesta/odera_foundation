@@ -23,6 +23,23 @@ import {
 	PopoverContent,
 	PopoverTrigger,
 } from "@/components/ui/popover";
+
+// Infer Event type based on usage in this file
+export type Event = {
+	id: number;
+	title: string;
+	slug: string;
+	description: string;
+	content?: string;
+	location: string;
+	event_date: string | Date;
+	event_end_date?: string | Date;
+	image_url?: string;
+	category_id?: number;
+	status: "draft" | "published" | "cancelled" | "completed";
+	is_featured: boolean;
+	images?: { image_url: string }[];
+};
 import { format } from "date-fns";
 import { CalendarIcon, Clock, Trash2, Edit, Eye, Loader2 } from "lucide-react";
 import {
@@ -49,8 +66,7 @@ import {
 	createEvent,
 	updateEvent,
 	deleteEvent,
-	type Event,
-	type EventCategory,
+	type EventCategoryType,
 	type EventFormData,
 	getEventCount,
 } from "@/actions/events";
@@ -60,7 +76,7 @@ export default function AdminEventsPage() {
 	const router = useRouter();
 	const [activeTab, setActiveTab] = useState("manage");
 	const [events, setEvents] = useState<Event[]>([]);
-	const [categories, setCategories] = useState<EventCategory[]>([]);
+	const [categories, setCategories] = useState<EventCategoryType[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [submitting, setSubmitting] = useState(false);
 	const [selectedDate, setSelectedDate] = useState<Date | undefined>(
@@ -79,6 +95,7 @@ export default function AdminEventsPage() {
 		content: "",
 		location: "",
 		event_date: new Date(),
+		event_end_date: new Date(),
 		status: "draft",
 		is_featured: false,
 		images: [],
@@ -97,7 +114,16 @@ export default function AdminEventsPage() {
 				getEventCategories(),
 				getEventCount(),
 			]);
-			setEvents(eventsData);
+			setEvents(
+				eventsData.map((event: any) => ({
+					...event,
+					images: event.images
+						? event.images.map((img: any) => ({
+								image_url: img.imageUrl ?? img.image_url ?? "",
+						  }))
+						: [],
+				}))
+			);
 			setCategories(categoriesData);
 			setTotalPages(Math.ceil(totalCount / 10));
 		} catch (error) {
@@ -167,7 +193,10 @@ export default function AdminEventsPage() {
 		} else {
 			// Remove end date if not selected
 			const { event_end_date, ...rest } = formData;
-			setFormData(rest);
+			setFormData({
+				...rest,
+				event_end_date: new Date(),
+			});
 		}
 	}, [selectedEndDate]);
 
@@ -214,12 +243,15 @@ export default function AdminEventsPage() {
 			};
 
 			if (editingEventId) {
-				result = await updateEvent(editingEventId, submitData);
+				result = await updateEvent(editingEventId, {
+					...submitData,
+					event_end_date: submitData.event_end_date ?? submitData.event_date, // fallback to event_date if undefined
+				});
 			} else {
 				result = await createEvent({
 					...submitData,
 					event_date: submitData.event_date,
-					event_end_date: submitData.event_end_date,
+					event_end_date: submitData.event_end_date ?? submitData.event_date,
 				});
 			}
 
@@ -275,8 +307,8 @@ export default function AdminEventsPage() {
 		setEditingEventId(event.id);
 
 		// Get image URLs from event.images
-		const imageUrls = event.images
-			? event.images.map((img) => img.image_url)
+		const imageUrls: string[] = event.images
+			? event.images.map((img: { image_url: string }) => img.image_url)
 			: [];
 		setUploadedImages(imageUrls);
 
@@ -289,7 +321,7 @@ export default function AdminEventsPage() {
 			event_date: new Date(event.event_date),
 			event_end_date: event.event_end_date
 				? new Date(event.event_end_date)
-				: undefined,
+				: new Date(),
 			image_url: event.image_url,
 			category_id: event.category_id,
 			status: event.status as any,
@@ -312,6 +344,8 @@ export default function AdminEventsPage() {
 			content: "",
 			location: "",
 			event_date: new Date(),
+			event_end_date: new Date(),
+			image_url: "",
 			status: "draft",
 			is_featured: false,
 			images: [],
@@ -328,7 +362,7 @@ export default function AdminEventsPage() {
 	};
 
 	return (
-		<div className="container px-4 py-12">
+		<div className="container px-4 py-12 w-full mx-auto">
 			<h1 className="text-3xl font-bold tracking-tight mb-8">
 				Event Management
 			</h1>

@@ -342,7 +342,7 @@ export default function Home() {
 							</div>
 						</div>
 					}>
-					<FeaturedEvents />
+					<FeaturedEvents events={[]} />
 				</Suspense>
 			</section>
 

@@ -1,51 +1,24 @@
 "use server";
 
-import { executeQuery } from "@/lib/db";
+import { db } from "@/db/db";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
+import {
+	events,
+	eventImages,
+	eventCategories,
+	eventRegistrations,
+	type Event,
+	type EventImage,
+	type EventCategory,
+} from "@/db/schema";
+import { and, eq, gt, lt, gte, lte, asc, desc, sql } from "drizzle-orm";
 
-// Define the Event type based on our database schema
-export type Event = {
-	id: number;
-	title: string;
-	slug: string;
-	description: string;
-	content?: string;
-	location: string;
-	event_date: Date;
-	event_end_date?: Date;
-	image_url?: string;
-	category_id?: number;
-	status: "draft" | "published" | "cancelled" | "completed";
-	is_featured: boolean;
-	created_by?: number;
-	created_at: Date;
-	updated_at: Date;
-	seo_metadata?: any;
-	images?: EventImage[];
-};
+export type { Event as EventType };
+export type { EventImage as EventImageType };
+export type { EventCategory as EventCategoryType };
 
-// Define the EventImage type
-export type EventImage = {
-	id: number;
-	event_id: number;
-	image_url: string;
-	alt_text?: string;
-	is_featured: boolean;
-	display_order: number;
-	created_at: Date;
-};
-
-// Define the EventCategory type
-export type EventCategory = {
-	id: number;
-	name: string;
-	slug: string;
-	description?: string;
-	created_at: Date;
-};
-
-// Validation schema for event creation/update
+// Validation schema remains the same
 const eventSchema = z.object({
 	title: z.string().min(3, "Title must be at least 3 characters"),
 	slug: z
@@ -58,11 +31,14 @@ const eventSchema = z.object({
 	description: z.string().min(10, "Description must be at least 10 characters"),
 	content: z.string().optional(),
 	location: z.string().min(3, "Location must be at least 3 characters"),
-	event_date: z.string().transform((str) => new Date(str)),
-	event_end_date: z
-		.string()
-		.optional()
-		.transform((str) => (str ? new Date(str) : undefined)),
+	event_date: z.union([z.string(), z.date()]).transform((val) => {
+		if (typeof val === "string") return new Date(val);
+		return val;
+	}),
+	event_end_date: z.union([z.string(), z.date()]).transform((val) => {
+		if (typeof val === "string") return new Date(val);
+		return val;
+	}),
 	image_url: z.string().url().optional(),
 	category_id: z.number().optional(),
 	status: z.enum(["draft", "published", "cancelled", "completed"]),
@@ -73,10 +49,10 @@ const eventSchema = z.object({
 
 export type EventFormData = z.infer<typeof eventSchema>;
 
-// Get all events
+// Get all events with Drizzle
 export async function getEvents(
 	options: {
-		status?: string;
+		status?: "draft" | "published" | "cancelled" | "completed";
 		limit?: number;
 		featured?: boolean;
 		categoryId?: number;
@@ -95,62 +71,73 @@ export async function getEvents(
 		pageSize = 10,
 	} = options;
 
-	let query = `
-    SELECT e.*, c.name as category_name 
-    FROM events e
-    LEFT JOIN event_categories c ON e.category_id = c.id
-    WHERE 1=1
-  `;
+	const query = db
+		.select({
+			...getEventFields(),
+			category_name: eventCategories.name,
+		})
+		.from(events)
+		.leftJoin(eventCategories, eq(events.categoryId, eventCategories.id))
+		.$dynamic();
 
-	const params: any[] = [];
-
+	// Apply filters
 	if (status) {
-		query += ` AND e.status = $${params.length + 1}`;
-		params.push(status);
+		query.where(eq(events.status, status));
 	}
 
 	if (featured !== undefined) {
-		query += ` AND e.is_featured = $${params.length + 1}`;
-		params.push(featured);
+		query.where(eq(events.isFeatured, featured));
 	}
 
 	if (categoryId) {
-		query += ` AND e.category_id = $${params.length + 1}`;
-		params.push(categoryId);
+		query.where(eq(events.categoryId, categoryId));
 	}
 
-	if (upcoming) {
-		query += ` AND e.event_date >= NOW()`;
-	} else if (upcoming === false) {
-		query += ` AND e.event_date < NOW()`;
+	if (upcoming !== undefined) {
+		query.where(
+			upcoming
+				? gte(events.eventDate, new Date())
+				: lt(events.eventDate, new Date())
+		);
 	}
 
-	query += ` ORDER BY e.event_date ${upcoming ? "ASC" : "DESC"}`;
+	// Apply sorting
+	query.orderBy(upcoming ? asc(events.eventDate) : desc(events.eventDate));
 
-	// Add pagination if not using limit
+	// Apply pagination
 	if (!limit) {
 		const offset = (page - 1) * pageSize;
-		query += ` LIMIT $${params.length + 1} OFFSET $${params.length + 2}`;
-		params.push(pageSize, offset);
+		query.limit(pageSize).offset(offset);
 	} else {
-		query += ` LIMIT $${params.length + 1}`;
-		params.push(limit);
+		query.limit(limit);
 	}
 
-	const events = await executeQuery<Event[]>(query, params);
+	const result = await query;
 
 	// Fetch images for each event
-	for (const event of events) {
-		event.images = await getEventImages(event.id);
-	}
+	// Use the actual result type from the query, not the column definitions
+	type EventWithCategory = {
+		[K in keyof ReturnType<typeof getEventFields>]: any;
+	} & { category_name: string | null };
 
-	return events;
+	type EventWithImages = EventWithCategory & {
+		images: Awaited<ReturnType<typeof getEventImages>>;
+	};
+
+	const eventsWithImages: EventWithImages[] = await Promise.all(
+		result.map(async (event) => ({
+			...event,
+			images: await getEventImages(event.id as number),
+		}))
+	);
+
+	return eventsWithImages;
 }
 
-// Get event count for pagination
+// Get event count with Drizzle
 export async function getEventCount(
 	options: {
-		status?: string;
+		status?: "draft" | "published" | "cancelled" | "completed";
 		featured?: boolean;
 		categoryId?: number;
 		upcoming?: boolean;
@@ -158,144 +145,132 @@ export async function getEventCount(
 ) {
 	const { status, featured, categoryId, upcoming } = options;
 
-	let query = `
-    SELECT COUNT(*) as count
-    FROM events e
-    WHERE 1=1
-  `;
+	const query = db
+		.select({ count: sql<number>`count(*)` })
+		.from(events)
+		.$dynamic();
 
-	const params: any[] = [];
-
+	// Apply filters
 	if (status) {
-		query += ` AND e.status = $${params.length + 1}`;
-		params.push(status);
+		query.where(eq(events.status, status));
 	}
 
 	if (featured !== undefined) {
-		query += ` AND e.is_featured = $${params.length + 1}`;
-		params.push(featured);
+		query.where(eq(events.isFeatured, featured));
 	}
 
 	if (categoryId) {
-		query += ` AND e.category_id = $${params.length + 1}`;
-		params.push(categoryId);
+		query.where(eq(events.categoryId, categoryId));
 	}
 
-	if (upcoming) {
-		query += ` AND e.event_date >= NOW()`;
-	} else if (upcoming === false) {
-		query += ` AND e.event_date < NOW()`;
+	if (upcoming !== undefined) {
+		query.where(
+			upcoming
+				? gte(events.eventDate, new Date())
+				: lt(events.eventDate, new Date())
+		);
 	}
 
-	const result = await executeQuery<[{ count: string }]>(query, params);
-	return Number.parseInt(result[0].count);
+	const result = await query;
+	return result[0].count;
 }
 
-// Get a single event by slug
+// Get a single event by slug with Drizzle
 export async function getEventBySlug(slug: string) {
-	const query = `
-    SELECT e.*, c.name as category_name 
-    FROM events e
-    LEFT JOIN event_categories c ON e.category_id = c.id
-    WHERE e.slug = $1
-  `;
+	const result = await db
+		.select({
+			...getEventFields(),
+			category_name: eventCategories.name,
+		})
+		.from(events)
+		.leftJoin(eventCategories, eq(events.categoryId, eventCategories.id))
+		.where(eq(events.slug, slug));
 
-	const events = await executeQuery<Event[]>(query, [slug]);
-
-	if (events.length === 0) {
+	if (result.length === 0) {
 		return null;
 	}
 
-	const event = events[0];
-
-	// Fetch images for the event
-	event.images = await getEventImages(event.id);
-
-	return event;
+	const event = result[0];
+	const images = await getEventImages(event.id);
+	return { ...event, images };
 }
 
-// Get images for an event
+// Get images for an event with Drizzle
 export async function getEventImages(eventId: number) {
-	const query = `
-    SELECT * FROM event_images
-    WHERE event_id = $1
-    ORDER BY is_featured DESC, display_order ASC
-  `;
-
-	return executeQuery<EventImage[]>(query, [eventId]);
+	return db
+		.select()
+		.from(eventImages)
+		.where(eq(eventImages.eventId, eventId))
+		.orderBy(desc(eventImages.isFeatured), asc(eventImages.displayOrder));
 }
 
-// Get all event categories
+// Get all event categories with Drizzle
 export async function getEventCategories() {
-	return executeQuery<EventCategory[]>(
-		"SELECT * FROM event_categories ORDER BY name"
-	);
+	return db.select().from(eventCategories).orderBy(asc(eventCategories.name));
 }
 
-// Create a new event
+// Create a new event with Drizzle (without transaction)
 export async function createEvent(data: EventFormData) {
 	try {
-		// Validate the input data
-		const validatedData = eventSchema.parse(data);
+		const processedData = {
+			...data,
+			event_date:
+				data.event_date instanceof Date
+					? data.event_date.toISOString()
+					: data.event_date,
+			event_end_date:
+				data.event_end_date instanceof Date
+					? data.event_end_date.toISOString()
+					: data.event_end_date,
+		};
 
-		// Start a transaction
-		await executeQuery("BEGIN");
+		const validatedData = eventSchema.parse(processedData);
 
-		// Create the event
-		const query = `
-      INSERT INTO events (
-        title, slug, description, content, location, 
-        event_date, event_end_date, image_url, category_id, 
-        status, is_featured, created_by, seo_metadata
-      )
-      VALUES (
-        $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13
-      )
-      RETURNING *
-    `;
+		interface SeoMetadata {
+			title: string;
+			description: string;
+			type: string;
+		}
 
-		const seoMetadata = {
+		const seoMetadata: SeoMetadata = {
 			title: validatedData.title,
 			description: validatedData.description.substring(0, 160),
 			type: "event",
 		};
 
-		const params = [
-			validatedData.title,
-			validatedData.slug,
-			validatedData.description,
-			validatedData.content || null,
-			validatedData.location,
-			validatedData.event_date,
-			validatedData.event_end_date || null,
-			validatedData.image_url || null,
-			validatedData.category_id || null,
-			validatedData.status,
-			validatedData.is_featured,
-			1, // Default admin user ID
-			JSON.stringify(seoMetadata),
-		];
-
-		const result = await executeQuery<Event[]>(query, params);
-		const event = result[0];
+		// Create the event
+		const [event] = await db
+			.insert(events)
+			.values({
+				title: validatedData.title,
+				slug: validatedData.slug,
+				description: validatedData.description,
+				content: validatedData.content || null,
+				location: validatedData.location,
+				eventDate: validatedData.event_date,
+				eventEndDate: validatedData.event_end_date || null,
+				imageUrl: Array.isArray(validatedData.image_url)
+					? validatedData.image_url[0] || null
+					: validatedData.image_url || null,
+				categoryId: validatedData.category_id || null,
+				status: validatedData.status,
+				isFeatured: validatedData.is_featured,
+				createdBy: 1, // Default admin user ID
+				seoMetadata: seoMetadata,
+			})
+			.returning();
 
 		// Add images if provided
 		if (validatedData.images && validatedData.images.length > 0) {
-			await addEventImages(event.id, validatedData.images);
+			await addEventImages(db, event.id as number, validatedData.images);
 		}
 
-		// Commit the transaction
-		await executeQuery("COMMIT");
-
-		// Revalidate the events pages
+		// Revalidate paths
 		revalidatePath("/events");
 		revalidatePath("/admin/events");
 
 		return { success: true, event };
 	} catch (error) {
-		// Rollback the transaction on error
-		await executeQuery("ROLLBACK");
-
 		console.error("Error creating event:", error);
 		return {
 			success: false,
@@ -305,84 +280,62 @@ export async function createEvent(data: EventFormData) {
 	}
 }
 
-// Update an existing event
+// Update an existing event with Drizzle (without transaction)
 export async function updateEvent(id: number, data: EventFormData) {
 	try {
-		// Validate the input data
 		const validatedData = eventSchema.parse(data);
 
-		// Start a transaction
-		await executeQuery("BEGIN");
+		interface SeoMetadata {
+			title: string;
+			description: string;
+			type: string;
+		}
 
-		const query = `
-      UPDATE events
-      SET 
-        title = $1,
-        slug = $2,
-        description = $3,
-        content = $4,
-        location = $5,
-        event_date = $6,
-        event_end_date = $7,
-        image_url = $8,
-        category_id = $9,
-        status = $10,
-        is_featured = $11,
-        updated_at = NOW(),
-        seo_metadata = $12
-      WHERE id = $13
-      RETURNING *
-    `;
-
-		const seoMetadata = {
+		const seoMetadata: SeoMetadata = {
 			title: validatedData.title,
 			description: validatedData.description.substring(0, 160),
 			type: "event",
 		};
 
-		const params = [
-			validatedData.title,
-			validatedData.slug,
-			validatedData.description,
-			validatedData.content || null,
-			validatedData.location,
-			validatedData.event_date,
-			validatedData.event_end_date || null,
-			validatedData.image_url || null,
-			validatedData.category_id || null,
-			validatedData.status,
-			validatedData.is_featured,
-			JSON.stringify(seoMetadata),
-			id,
-		];
-
-		const result = await executeQuery<Event[]>(query, params);
-		const event = result[0];
+		// Update the event
+		const [event] = await db
+			.update(events)
+			.set({
+				title: validatedData.title,
+				slug: validatedData.slug,
+				description: validatedData.description,
+				content: validatedData.content || null,
+				location: validatedData.location,
+				eventDate: validatedData.event_date,
+				eventEndDate: validatedData.event_end_date || null,
+				imageUrl: validatedData.image_url || null,
+				categoryId: validatedData.category_id || null,
+				status: validatedData.status,
+				isFeatured: validatedData.is_featured,
+				updatedAt: new Date(),
+				seoMetadata: seoMetadata,
+			})
+			.where(eq(events.id, id))
+			.returning();
 
 		// Update images if provided
 		if (validatedData.images) {
-			// First, delete existing images
-			await executeQuery("DELETE FROM event_images WHERE event_id = $1", [id]);
+			// Delete existing images
+			await db.delete(eventImages).where(eq(eventImages.eventId, id));
 
-			// Then add new images
+			// Add new images
 			if (validatedData.images.length > 0) {
-				await addEventImages(id, validatedData.images);
+				await addEventImages(db, id, validatedData.images);
 			}
 		}
 
-		// Commit the transaction
-		await executeQuery("COMMIT");
-
-		// Revalidate the events pages
+		// Revalidate paths
 		revalidatePath("/events");
 		revalidatePath("/admin/events");
 		revalidatePath(`/events/${validatedData.slug}`);
 
 		return { success: true, event };
 	} catch (error) {
-		// Rollback the transaction on error
-		await executeQuery("ROLLBACK");
-
 		console.error("Error updating event:", error);
 		return {
 			success: false,
@@ -392,58 +345,56 @@ export async function updateEvent(id: number, data: EventFormData) {
 	}
 }
 
-// Add images to an event
-async function addEventImages(eventId: number, imageUrls: string[]) {
-	for (let i = 0; i < imageUrls.length; i++) {
-		const query = `
-      INSERT INTO event_images (
-        event_id, image_url, is_featured, display_order
-      )
-      VALUES ($1, $2, $3, $4)
-    `;
+// Helper to add event images with Drizzle (modified to not expect transaction)
+// Updated helper function
+async function addEventImages(
+	dbClient: typeof db,
+	eventId: number,
+	imageUrls: string[]
+) {
+	// First image becomes the main image_url
+	const mainImageUrl = imageUrls[0] || null;
 
-		const params = [
-			eventId,
-			imageUrls[i],
-			i === 0, // First image is featured
-			i,
-		];
+	// Update the event's image_url with the first image
+	await dbClient
+		.update(events)
+		.set({ imageUrl: mainImageUrl })
+		.where(eq(events.id, eventId));
 
-		await executeQuery(query, params);
-	}
+	// Add all images to event_images
+	await Promise.all(
+		imageUrls.map((url, index) =>
+			dbClient.insert(eventImages).values({
+				eventId,
+				imageUrl: url,
+				isFeatured: index === 0,
+				displayOrder: index,
+			})
+		)
+	);
 }
 
-// Delete an event
+// Delete an event with Drizzle (without transaction)
 export async function deleteEvent(id: number) {
 	try {
-		// Start a transaction
-		await executeQuery("BEGIN");
+		// Delete the event (images will cascade)
+		const [event] = await db
+			.delete(events)
+			.where(eq(events.id, id))
+			.returning();
 
-		// Delete event images first (cascade will handle this, but being explicit)
-		await executeQuery("DELETE FROM event_images WHERE event_id = $1", [id]);
-
-		// Delete the event
-		const query = "DELETE FROM events WHERE id = $1 RETURNING *";
-		const result = await executeQuery<Event[]>(query, [id]);
-
-		// Commit the transaction
-		await executeQuery("COMMIT");
-
-		// Revalidate the events pages
+		// Revalidate paths
 		revalidatePath("/events");
 		revalidatePath("/admin/events");
 
-		return { success: true, event: result[0] };
+		return { success: true, event };
 	} catch (error) {
-		// Rollback the transaction on error
-		await executeQuery("ROLLBACK");
-
 		console.error("Error deleting event:", error);
 		return { success: false, error: "Failed to delete event" };
 	}
 }
 
-// Register for an event
+// Register for an event with Drizzle
 export async function registerForEvent(
 	eventId: number,
 	data: {
@@ -454,27 +405,42 @@ export async function registerForEvent(
 	}
 ) {
 	try {
-		const query = `
-      INSERT INTO event_registrations (
-        event_id, name, email, phone, notes
-      )
-      VALUES ($1, $2, $3, $4, $5)
-      RETURNING *
-    `;
+		const [registration] = await db
+			.insert(eventRegistrations)
+			.values({
+				eventId,
+				name: data.name,
+				email: data.email,
+				phone: data.phone || null,
+				notes: data.notes || null,
+			})
+			.returning();
 
-		const params = [
-			eventId,
-			data.name,
-			data.email,
-			data.phone || null,
-			data.notes || null,
-		];
-
-		const result = await executeQuery(query, params);
-
-		return { success: true, registration: result[0] };
+		return { success: true, registration };
 	} catch (error) {
 		console.error("Error registering for event:", error);
 		return { success: false, error: "Failed to register for event" };
 	}
+}
+
+// Helper function to select event fields
+function getEventFields() {
+	return {
+		id: events.id,
+		title: events.title,
+		slug: events.slug,
+		description: events.description,
+		content: events.content,
+		location: events.location,
+		event_date: events.eventDate,
+		event_end_date: events.eventEndDate,
+		image_url: events.imageUrl,
+		category_id: events.categoryId,
+		status: events.status,
+		is_featured: events.isFeatured,
+		created_by: events.createdBy,
+		created_at: events.createdAt,
+		updated_at: events.updatedAt,
+		seo_metadata: events.seoMetadata,
+	};
 }
