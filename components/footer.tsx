@@ -68,13 +68,6 @@ export default function Footer() {
 							</li>
 							<li>
 								<Link
-									href="/blog"
-									className="text-emerald-100 hover:text-white">
-									Blog
-								</Link>
-							</li>
-							<li>
-								<Link
 									href="/donate"
 									className="text-emerald-100 hover:text-white">
 									Donate
@@ -96,7 +89,7 @@ export default function Footer() {
 							<li className="flex items-start">
 								<MapPin className="h-5 w-5 mr-2 mt-0.5 text-emerald-400" />
 								<span className="text-emerald-100">
-									123 Charity Lane, Compassion City, 12345
+									Plot 1032A1 Independence Layout Enugu
 								</span>
 							</li>
 							<li className="flex items-center">
@@ -106,7 +99,7 @@ export default function Footer() {
 							<li className="flex items-center">
 								<Mail className="h-5 w-5 mr-2 text-emerald-400" />
 								<span className="text-emerald-100">
-									info@oderahelpinghand.org
+									info@oderahelpinghandsfoundation.org
 								</span>
 							</li>
 						</ul>
@@ -133,7 +126,7 @@ export default function Footer() {
 
 				<div className="border-t border-emerald-800 mt-12 pt-6 text-center text-emerald-300">
 					<p>
-						© {new Date().getFullYear()} ODERA HELPING HAND FOUNDATION. All
+						© {new Date().getFullYear()} Odera Helping Hands Foundation. All
 						rights reserved.
 					</p>
 				</div>

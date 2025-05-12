@@ -24,7 +24,7 @@ export default function AboutPage() {
 					className="mt-6 p-6 bg-muted/30 rounded-lg">
 					<h2 className="text-2xl font-bold mb-4">Our Mission</h2>
 					<p className="mb-4">
-						At ODERA HELPING HAND FOUNDATION, our mission is to alleviate
+						At Odera Helping Hands Foundation, our mission is to alleviate
 						poverty, promote education, advance healthcare, foster community
 						development, and protect the environment through sustainable
 						initiatives and partnerships.
@@ -58,7 +58,7 @@ export default function AboutPage() {
 					className="mt-6 p-6 bg-muted/30 rounded-lg">
 					<h2 className="text-2xl font-bold mb-4">Our History</h2>
 					<p className="mb-4">
-						ODERA HELPING HAND FOUNDATION was established in 2008 by a group of
+						Odera Helping Hands Foundation was established in 2008 by a group of
 						passionate individuals who witnessed the challenges faced by
 						vulnerable communities and were determined to make a difference.
 						What began as a small initiative to provide basic necessities to a

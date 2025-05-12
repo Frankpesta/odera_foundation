@@ -37,7 +37,7 @@ export async function generateMetadata({
 	}
 
 	return {
-		title: `${event.title} | ODERA HELPING HAND FOUNDATION`,
+		title: `${event.title} | Odera Helping Hands Foundation`,
 		description: event.description.substring(0, 160),
 		openGraph: {
 			title: event.title,

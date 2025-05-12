@@ -28,7 +28,7 @@ export function JsonLd({ event }: { event: Event }) {
 			"https://oderahelpinghand.org/og-image.jpg",
 		organizer: {
 			"@type": "Organization",
-			name: "ODERA HELPING HAND FOUNDATION",
+			name: "Odera Helping Hands Foundation",
 			url: "https://oderahelpinghand.org",
 		},
 		eventStatus: "https://schema.org/EventScheduled",

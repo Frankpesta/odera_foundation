@@ -140,7 +140,7 @@ export default function Home() {
 								Our Mission
 							</h2>
 							<p className="animate-item text-lg mb-6">
-								At ODERA HELPING HAND FOUNDATION, we are dedicated to
+								At Odera Helping Hands Foundation, we are dedicated to
 								alleviating poverty, promoting education, advancing healthcare,
 								fostering community development, and protecting the environment
 								through sustainable initiatives and partnerships.
@@ -157,7 +157,7 @@ export default function Home() {
 						</div>
 						<div className="animate-item relative h-[400px] rounded-lg overflow-hidden shadow-xl">
 							<Image
-								src="/placeholder.svg?height=800&width=600"
+								src="/class2.jpg"
 								alt="Children in a classroom"
 								fill
 								className="object-cover"
@@ -342,7 +342,7 @@ export default function Home() {
 							</div>
 						</div>
 					}>
-					<FeaturedEvents events={[]} />
+					<FeaturedEvents />
 				</Suspense>
 			</section>
 

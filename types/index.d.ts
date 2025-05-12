@@ -1,9 +1,3 @@
-"use server";
-
-import { executeQuery } from "@/lib/db";
-import { revalidatePath } from "next/cache";
-import { z } from "zod";
-
 // Define the Event type based on our database schema
 export type Event = {
 	id: number;
