@@ -15,8 +15,8 @@ const fontSans = FontSans({
 
 export const metadata: Metadata = {
 	title: {
-		default: "ODERA HELPING HAND FOUNDATION",
-		template: "%s | ODERA HELPING HAND FOUNDATION",
+		default: "Odera Helping Hands Foundation",
+		template: "%s | Odera Helping Hands Foundation",
 	},
 	description:
 		"Alleviating poverty, promoting education, advancing healthcare, fostering community development, and protecting the environment.",
@@ -30,15 +30,15 @@ export const metadata: Metadata = {
 		"community development",
 		"environmental protection",
 	],
-	authors: [{ name: "ODERA HELPING HAND FOUNDATION" }],
-	creator: "ODERA HELPING HAND FOUNDATION",
-	publisher: "ODERA HELPING HAND FOUNDATION",
+	authors: [{ name: "Odera Helping Hands Foundation" }],
+	creator: "Odera Helping Hands Foundation",
+	publisher: "Odera Helping Hands Foundation",
 	openGraph: {
 		type: "website",
 		locale: "en_US",
 		url: "https://oderahelpinghand.org",
-		siteName: "ODERA HELPING HAND FOUNDATION",
-		title: "ODERA HELPING HAND FOUNDATION",
+		siteName: "Odera Helping Hands Foundation",
+		title: "Odera Helping Hands Foundation",
 		description:
 			"Alleviating poverty, promoting education, advancing healthcare, fostering community development, and protecting the environment.",
 		images: [
@@ -46,13 +46,13 @@ export const metadata: Metadata = {
 				url: "https://oderahelpinghand.org/og-image.jpg",
 				width: 1200,
 				height: 630,
-				alt: "ODERA HELPING HAND FOUNDATION",
+				alt: "Odera Helping Hands Foundation",
 			},
 		],
 	},
 	twitter: {
 		card: "summary_large_image",
-		title: "ODERA HELPING HAND FOUNDATION",
+		title: "Odera Helping Hands Foundation",
 		description:
 			"Alleviating poverty, promoting education, advancing healthcare, fostering community development, and protecting the environment.",
 		images: ["https://oderahelpinghand.org/og-image.jpg"],

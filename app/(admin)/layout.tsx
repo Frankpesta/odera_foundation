@@ -10,10 +10,8 @@ export default function RootLayout({
 	return (
 		<SidebarProvider>
 			<AppSidebar />
-			<main>
-				<SidebarTrigger />
-				<div className="w-full">{children}</div>
-			</main>
+			<SidebarTrigger />
+			{children}
 		</SidebarProvider>
 	);
 }

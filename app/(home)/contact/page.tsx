@@ -15,6 +15,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { MapPin, Phone, Mail, Clock } from "lucide-react";
+import { contactActions } from "@/actions/contact.actions";
 
 export default function ContactPage() {
 	const [isSubmitting, setIsSubmitting] = useState(false);
@@ -106,7 +107,7 @@ export default function ContactPage() {
 								<div>
 									<h3 className="font-semibold">Address</h3>
 									<p className="text-muted-foreground">
-										123 Charity Lane, Compassion City, 12345
+										Plot 1032A1 Independence Layout Enugu
 									</p>
 								</div>
 							</div>
@@ -122,7 +123,7 @@ export default function ContactPage() {
 								<div>
 									<h3 className="font-semibold">Email</h3>
 									<p className="text-muted-foreground">
-										info@oderahelpinghand.org
+										info@oderahelpinghandsfoundation.org
 									</p>
 								</div>
 							</div>
@@ -223,11 +224,11 @@ export default function ContactPage() {
 
 			<div className="mt-16 max-w-5xl mx-auto h-[400px] rounded-lg overflow-hidden shadow-lg">
 				{/* This would be replaced with an actual Google Maps embed */}
-				<div className="w-full h-full bg-muted flex items-center justify-center">
+				{/* <div className="w-full h-full bg-muted flex items-center justify-center">
 					<p className="text-muted-foreground">
 						Google Maps Embed Would Go Here
 					</p>
-				</div>
+				</div> */}
 			</div>
 		</div>
 	);

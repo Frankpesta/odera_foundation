@@ -18,7 +18,7 @@ export default function OurWorkPage() {
 			description:
 				"We provide basic necessities like food, shelter, and healthcare to individuals and communities in need through various initiatives.",
 			icon: Heart,
-			image: "/placeholder.svg?height=400&width=600",
+			image: "/poverty.jpg",
 			programs: [
 				"Emergency Relief Distribution",
 				"Sustainable Livelihood Programs",
@@ -32,7 +32,7 @@ export default function OurWorkPage() {
 			description:
 				"We support educational initiatives through scholarships, educational materials, and literacy programs to empower future generations.",
 			icon: BookOpen,
-			image: "/placeholder.svg?height=400&width=600",
+			image: "/education.jpg",
 			programs: [
 				"Scholarship Programs",
 				"School Infrastructure Development",
@@ -46,7 +46,7 @@ export default function OurWorkPage() {
 			description:
 				"We improve healthcare access and quality, particularly for those with limited resources through medical camps and health education.",
 			icon: Stethoscope,
-			image: "/placeholder.svg?height=400&width=600",
+			image: "/health.jpg",
 			programs: [
 				"Mobile Health Clinics",
 				"Maternal and Child Health Programs",
@@ -60,7 +60,7 @@ export default function OurWorkPage() {
 			description:
 				"We improve the overall well-being of communities through job training, infrastructure projects, and cultural enrichment programs.",
 			icon: Users,
-			image: "/placeholder.svg?height=400&width=600",
+			image: "/community.jpg",
 			programs: [
 				"Vocational Training Centers",
 				"Community Infrastructure Projects",
@@ -74,7 +74,7 @@ export default function OurWorkPage() {
 			description:
 				"We prioritize environmental conservation and sustainable practices through research, conservation projects, and awareness campaigns.",
 			icon: Leaf,
-			image: "/placeholder.svg?height=400&width=600",
+			image: "/environment.jpg",
 			programs: [
 				"Reforestation Projects",
 				"Clean Water Initiatives",
@@ -122,13 +122,13 @@ export default function OurWorkPage() {
 									))}
 								</ul>
 							</div>
-							<Button
+							{/* <Button
 								asChild
 								className="bg-emerald-600 hover:bg-emerald-700 text-white">
 								<Link href={`/our-work/${area.id}`}>
 									Learn More <ArrowRight className="ml-2 h-4 w-4" />
 								</Link>
-							</Button>
+							</Button> */}
 						</div>
 						<div
 							className={`relative h-[400px] rounded-lg overflow-hidden shadow-xl ${
@@ -157,12 +157,6 @@ export default function OurWorkPage() {
 						asChild
 						className="bg-emerald-600 hover:bg-emerald-700 text-white">
 						<Link href="/donate">Donate Now</Link>
-					</Button>
-					<Button
-						asChild
-						variant="outline"
-						className="border-emerald-600 text-emerald-600 hover:bg-emerald-50">
-						<Link href="/get-involved">Get Involved</Link>
 					</Button>
 				</div>
 			</div>

@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { MapPin, ArrowRight } from "lucide-react";
 import { format } from "date-fns";
+import { useEffect, useState } from "react";
+import { getEvents } from "@/actions/events";
 
 interface Event {
 	id: string;
@@ -22,7 +24,23 @@ interface FeaturedEventsProps {
 	events: Event[];
 }
 
-export function FeaturedEvents({ events }: FeaturedEventsProps) {
+export function FeaturedEvents() {
+	const [newEvents, setNewEvents] = useState<Event[]>([]);
+	useEffect(() => {
+		async function getFeaturedEvents() {
+			const events = await getEvents({
+				status: "published",
+				featured: true,
+				limit: 3,
+			});
+			if (events.length === 0) {
+				return null;
+			} else {
+				setNewEvents(events);
+			}
+		}
+		getFeaturedEvents();
+	}, []);
 	return (
 		<section className="py-20 bg-emerald-50 dark:bg-emerald-950/30">
 			<div className="container px-4">
@@ -37,7 +55,7 @@ export function FeaturedEvents({ events }: FeaturedEventsProps) {
 				</div>
 
 				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-					{events?.map((event) => (
+					{newEvents?.map((event) => (
 						<Card key={event.id} className="animate-item overflow-hidden">
 							<div className="relative h-48">
 								<Image
