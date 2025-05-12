@@ -1,23 +1,28 @@
+// app/components/featured-events.tsx
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { MapPin, ArrowRight } from "lucide-react";
-import { getEvents } from "@/app/actions/events";
 import { format } from "date-fns";
 
-export async function FeaturedEvents() {
-	const events = await getEvents({
-		status: "published",
-		upcoming: true,
-		featured: true,
-		limit: 3,
-	});
+interface Event {
+	id: string;
+	title: string;
+	description: string;
+	event_date: string;
+	location: string;
+	slug: string;
+	image_url: string | null;
+}
 
-	if (events.length === 0) {
-		return null;
-	}
+interface FeaturedEventsProps {
+	events: Event[];
+}
 
+export function FeaturedEvents({ events }: FeaturedEventsProps) {
 	return (
 		<section className="py-20 bg-emerald-50 dark:bg-emerald-950/30">
 			<div className="container px-4">
@@ -32,16 +37,17 @@ export async function FeaturedEvents() {
 				</div>
 
 				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-					{events.map((event) => (
+					{events?.map((event) => (
 						<Card key={event.id} className="animate-item overflow-hidden">
 							<div className="relative h-48">
 								<Image
 									src={
-										event.image_url || "/placeholder.svg?height=400&width=600"
+										event?.image_url || "/placeholder.svg?height=400&width=600"
 									}
 									alt={event.title}
 									fill
 									className="object-cover"
+									sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
 								/>
 							</div>
 							<CardContent className="p-6">

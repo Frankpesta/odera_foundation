@@ -3,7 +3,7 @@
 import { useEffect, useRef, Suspense } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { animate } from "animejs";
+import anime from "animejs";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -16,35 +16,26 @@ import {
 } from "lucide-react";
 import ImpactCounter from "@/components/impact-counter";
 import NewsletterSignup from "@/components/newsletter-signup";
-// import { FeaturedEvents } from "@/components/featured-events"
+import { FeaturedEvents } from "@/components/featured-events";
+import UltimateHero from "@/components/ultimate-hero";
 
 export default function Home() {
-	const heroRef = useRef<HTMLDivElement>(null);
 	const missionRef = useRef<HTMLDivElement>(null);
 	const statsRef = useRef<HTMLDivElement>(null);
 	const areasRef = useRef<HTMLDivElement>(null);
 	const eventsRef = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
-		// Hero section animation
-		animate(heroRef, {
-			translateY: [50, 0],
-			opacity: [0, 1],
-			delay: 200,
-			stagger: 100,
-			easing: "easeOutQuad",
-		});
-
 		// Mission section animation on scroll
 		const observerMission = new IntersectionObserver(
 			(entries) => {
 				entries.forEach((entry) => {
 					if (entry.isIntersecting) {
-						animate(missionRef, {
+						anime({
+							targets: missionRef.current?.querySelectorAll(".animate-item"),
 							translateY: [50, 0],
 							opacity: [0, 1],
-							stagger: 150,
-							delay: 200,
+							delay: anime.stagger(150),
 							easing: "easeOutQuad",
 						});
 						observerMission.disconnect();
@@ -63,11 +54,11 @@ export default function Home() {
 			(entries) => {
 				entries.forEach((entry) => {
 					if (entry.isIntersecting) {
-						animate(statsRef, {
+						anime({
+							targets: statsRef.current?.querySelectorAll(".animate-item"),
 							scale: [0.8, 1],
 							opacity: [0, 1],
-							stagger: 150,
-							delay: 200,
+							delay: anime.stagger(150),
 							easing: "easeOutQuad",
 						});
 						observerStats.disconnect();
@@ -86,11 +77,11 @@ export default function Home() {
 			(entries) => {
 				entries.forEach((entry) => {
 					if (entry.isIntersecting) {
-						animate(areasRef, {
+						anime({
+							targets: areasRef.current?.querySelectorAll(".animate-item"),
 							translateX: [50, 0],
 							opacity: [0, 1],
-							stagger: 150,
-							delay: 200,
+							delay: anime.stagger(150),
 							easing: "easeOutQuad",
 						});
 						observerAreas.disconnect();
@@ -109,11 +100,11 @@ export default function Home() {
 			(entries) => {
 				entries.forEach((entry) => {
 					if (entry.isIntersecting) {
-						animate(eventsRef, {
+						anime({
+							targets: eventsRef.current?.querySelectorAll(".animate-item"),
 							translateY: [30, 0],
 							opacity: [0, 1],
-							stagger: 150,
-							delay: 200,
+							delay: anime.stagger(150),
 							easing: "easeOutQuad",
 						});
 						observerEvents.disconnect();
@@ -137,41 +128,8 @@ export default function Home() {
 
 	return (
 		<div className="overflow-hidden">
-			{/* Hero Section */}
-			<section
-				ref={heroRef}
-				className="relative h-[90vh] flex items-center justify-center overflow-hidden bg-gradient-to-r from-emerald-900 to-teal-800 dark:from-emerald-950 dark:to-teal-900">
-				<div className="absolute inset-0 z-0 opacity-20">
-					<div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.1)_0,rgba(0,0,0,0.3)_100%)]"></div>
-				</div>
-				<div className="container relative z-10 px-4 text-center text-white">
-					<h1 className="animate-item mb-6 text-4xl font-extrabold tracking-tight sm:text-5xl md:text-6xl">
-						ODERA HELPING HAND FOUNDATION
-					</h1>
-					<p className="animate-item mx-auto mb-8 max-w-3xl text-xl">
-						Transforming lives through compassion, education, and sustainable
-						development
-					</p>
-					<div className="animate-item flex flex-wrap justify-center gap-4">
-						<Button
-							asChild
-							size="lg"
-							className="bg-emerald-600 hover:bg-emerald-700 text-white">
-							<Link href="/donate">Donate Now</Link>
-						</Button>
-						<Button
-							asChild
-							size="lg"
-							variant="outline"
-							className="border-white text-white hover:bg-white/10">
-							<Link href="/get-involved">Get Involved</Link>
-						</Button>
-					</div>
-				</div>
-				<div className="absolute bottom-10 left-0 right-0 flex justify-center animate-bounce">
-					<ArrowRight className="rotate-90 text-white/70" size={32} />
-				</div>
-			</section>
+			{/* Replace the old hero with our new UltimateHero */}
+			<UltimateHero />
 
 			{/* Mission Section */}
 			<section ref={missionRef} className="py-20 bg-background">
@@ -209,6 +167,7 @@ export default function Home() {
 				</div>
 			</section>
 
+			{/* Rest of the page content remains the same */}
 			{/* Impact Stats Section */}
 			<section ref={statsRef} className="py-20 bg-muted">
 				<div className="container px-4">
@@ -364,26 +323,28 @@ export default function Home() {
 				</div>
 			</section>
 
-			{/* Replace the static Recent Events section with the dynamic FeaturedEvents component */}
-			<Suspense
-				fallback={
-					<div className="py-20 bg-emerald-50 dark:bg-emerald-950/30">
-						<div className="container px-4">
-							<h2 className="text-3xl font-bold tracking-tight mb-12">
-								Featured Events
-							</h2>
-							<div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-								{[1, 2, 3].map((i) => (
-									<div
-										key={i}
-										className="h-[300px] bg-muted animate-pulse rounded-lg"></div>
-								))}
+			{/* Featured Events Section */}
+			<section ref={eventsRef}>
+				<Suspense
+					fallback={
+						<div className="py-20 bg-emerald-50 dark:bg-emerald-950/30">
+							<div className="container px-4">
+								<h2 className="text-3xl font-bold tracking-tight mb-12">
+									Featured Events
+								</h2>
+								<div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+									{[1, 2, 3].map((i) => (
+										<div
+											key={i}
+											className="h-[300px] bg-muted animate-pulse rounded-lg"></div>
+									))}
+								</div>
 							</div>
 						</div>
-					</div>
-				}>
-				{/* <FeaturedEvents /> */}
-			</Suspense>
+					}>
+					<FeaturedEvents events={[]} />
+				</Suspense>
+			</section>
 
 			{/* Newsletter Section */}
 			<section className="py-20 bg-background">
