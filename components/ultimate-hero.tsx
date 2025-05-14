@@ -71,9 +71,7 @@ export default function UltimateHero() {
 	};
 
 	return (
-		<section
-			ref={heroRef}
-			className="relative h-[130vh] md:h-screen w-full overflow-hidden">
+		<section ref={heroRef} className="relative h-screen w-full overflow-hidden">
 			{/* Interactive Background */}
 			<InteractiveBackground />
 
