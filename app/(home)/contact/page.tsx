@@ -144,7 +144,7 @@ export default function ContactPage() {
 								<Phone className="h-5 w-5 mr-3 mt-0.5 text-emerald-600" />
 								<div>
 									<h3 className="font-semibold">Phone</h3>
-									<p className="text-muted-foreground">+234 803 569 6810</p>
+									<p className="text-muted-foreground">+234 000 000 0000</p>
 								</div>
 							</div>
 							<div className="flex items-start">
