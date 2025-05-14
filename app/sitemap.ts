@@ -2,7 +2,7 @@ import { getEvents } from "@/actions/events";
 import type { MetadataRoute } from "next";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-	const baseUrl = "https://oderahelpinghand.org";
+	const baseUrl = "https://oderahelpinghandsfoundation.org";
 
 	// Get all published events
 	const events = await getEvents({ status: "published" });

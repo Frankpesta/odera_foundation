@@ -44,13 +44,14 @@ export async function generateMetadata({
 			description: event.description.substring(0, 160),
 			type: "article",
 			publishedTime: event.created_at.toString(),
-			url: `https://oderahelpinghand.org/events/${event.slug}`,
+			url: `https://oderahelpinghandsfoundation.org/events/${event.slug}`,
 			images: [
 				{
 					url:
 						event.images && event.images.length > 0
 							? event.images[0].image_url
-							: event.image_url || "https://oderahelpinghand.org/og-image.jpg",
+							: event.image_url ||
+							  "https://oderahelpinghandsfoundation.org/og-image.jpg",
 					width: 1200,
 					height: 630,
 					alt: event.title,
@@ -64,7 +65,8 @@ export async function generateMetadata({
 			images: [
 				event.images && event.images.length > 0
 					? event.images[0].image_url
-					: event.image_url || "https://oderahelpinghand.org/og-image.jpg",
+					: event.image_url ||
+					  "https://oderahelpinghandsfoundation.org/og-image.jpg",
 			],
 		},
 	};
