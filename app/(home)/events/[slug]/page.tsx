@@ -26,7 +26,8 @@ export async function generateMetadata({
 }: {
 	params: { slug: string };
 }): Promise<Metadata> {
-	const event = await getEventBySlug(params.slug);
+	const slug = params.slug;
+	const event = await getEventBySlug(slug);
 
 	if (!event) {
 		return {
@@ -77,7 +78,8 @@ type EventPageProps = {
 };
 
 export default async function EventPage({ params }: EventPageProps) {
-	const event = await getEventBySlug(params.slug);
+	const slug = params.slug;
+	const event = await getEventBySlug(slug);
 
 	if (!event) {
 		notFound();
