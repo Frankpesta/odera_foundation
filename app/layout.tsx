@@ -4,9 +4,8 @@ import { Mona_Sans as FontSans } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { cn } from "@/lib/utils";
-import Header from "@/components/header";
-import Footer from "@/components/footer";
 import { Toaster } from "@/components/ui/sonner";
+import { Providers } from "./providers";
 
 const fontSans = FontSans({
 	subsets: ["latin"],
@@ -36,14 +35,14 @@ export const metadata: Metadata = {
 	openGraph: {
 		type: "website",
 		locale: "en_US",
-		url: "https://oderahelpinghand.org",
+		url: "https://oderahelpinghandsfoundation.org",
 		siteName: "Odera Helping Hands Foundation",
 		title: "Odera Helping Hands Foundation",
 		description:
 			"Alleviating poverty, promoting education, advancing healthcare, fostering community development, and protecting the environment.",
 		images: [
 			{
-				url: "https://oderahelpinghand.org/og-image.jpg",
+				url: "https://oderahelpinghandsfoundation.org/og-image.jpg",
 				width: 1200,
 				height: 630,
 				alt: "Odera Helping Hands Foundation",
@@ -55,7 +54,7 @@ export const metadata: Metadata = {
 		title: "Odera Helping Hands Foundation",
 		description:
 			"Alleviating poverty, promoting education, advancing healthcare, fostering community development, and protecting the environment.",
-		images: ["https://oderahelpinghand.org/og-image.jpg"],
+		images: ["https://oderahelpinghandsfoundation.org/og-image.jpg"],
 	},
 	icons: {
 		icon: "/favicon.ico",
@@ -82,7 +81,9 @@ export default function RootLayout({
 					defaultTheme="system"
 					enableSystem
 					disableTransitionOnChange>
-					<div className="">{children}</div>
+					<div className="">
+						<Providers>{children}</Providers>
+					</div>
 					<Toaster />
 				</ThemeProvider>
 			</body>

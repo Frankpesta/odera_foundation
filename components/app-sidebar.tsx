@@ -24,11 +24,6 @@ import { Button } from "@/components/ui/button";
 // Menu items.
 const items = [
 	{
-		title: "Home",
-		url: "/",
-		icon: Home,
-	},
-	{
 		title: "Dashboard",
 		url: "/admin",
 		icon: LayoutDashboard,
@@ -55,8 +50,9 @@ export function AppSidebar() {
 		<Sidebar side="left" variant="sidebar" collapsible="offcanvas">
 			<SidebarHeader className="py-12">
 				<div className="flex items-center space-x-2">
-					<img src="/logo.png" alt="Logo" className="h-8 w-8 rounded-full" />
-					<span className="text-lg font-bold">Admin Panel</span>
+					<Link href={"/"} className="text-lg font-bold">
+						Admin Panel
+					</Link>
 				</div>
 			</SidebarHeader>
 			<SidebarContent className="px-4 py-2">

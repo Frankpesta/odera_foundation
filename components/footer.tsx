@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,8 +13,40 @@ import {
 	Phone,
 	MapPin,
 } from "lucide-react";
+import { subscribeToNewsletter } from "@/actions/contact.actions";
 
 export default function Footer() {
+	const [email, setEmail] = useState("");
+	const [isSubmitting, setIsSubmitting] = useState(false);
+	const [isSuccess, setIsSuccess] = useState(false);
+	const [error, setError] = useState<string | null>(null);
+
+	const handleSubmit = async (e: React.FormEvent) => {
+		e.preventDefault();
+		setError(null);
+		setIsSubmitting(true);
+
+		try {
+			await subscribeToNewsletter({
+				email,
+				source: "footer_signup", // Track where signups come from
+			});
+
+			setIsSuccess(true);
+			setEmail("");
+
+			// Reset success message after 3 seconds
+			setTimeout(() => {
+				setIsSuccess(false);
+			}, 3000);
+		} catch (err) {
+			setError("Failed to subscribe. Please try again later.");
+			console.error("Subscription error:", err);
+		} finally {
+			setIsSubmitting(false);
+		}
+	};
+
 	return (
 		<footer className="bg-emerald-950 text-white">
 			<div className="container px-4 py-12">
@@ -94,7 +129,7 @@ export default function Footer() {
 							</li>
 							<li className="flex items-center">
 								<Phone className="h-5 w-5 mr-2 text-emerald-400" />
-								<span className="text-emerald-100">+1 (234) 567-8901</span>
+								<span className="text-emerald-100">+234 803 569 6810</span>
 							</li>
 							<li className="flex items-center">
 								<Mail className="h-5 w-5 mr-2 text-emerald-400" />
@@ -111,16 +146,28 @@ export default function Footer() {
 							Subscribe to our newsletter to receive updates on our work and
 							upcoming events.
 						</p>
-						<div className="flex flex-col space-y-2">
+						<form onSubmit={handleSubmit} className="flex flex-col space-y-2">
 							<Input
 								type="email"
 								placeholder="Your email address"
 								className="bg-emerald-900 border-emerald-700 text-white placeholder:text-emerald-300"
+								value={email}
+								onChange={(e) => setEmail(e.target.value)}
+								required
 							/>
-							<Button className="bg-emerald-600 hover:bg-emerald-700 text-white">
-								Subscribe
+							<Button
+								type="submit"
+								className="bg-emerald-600 hover:bg-emerald-700 text-white"
+								disabled={isSubmitting}>
+								{isSubmitting ? "Subscribing..." : "Subscribe"}
 							</Button>
-						</div>
+						</form>
+						{isSuccess && (
+							<p className="mt-2 text-sm text-emerald-400">
+								Thank you for subscribing!
+							</p>
+						)}
+						{error && <p className="mt-2 text-sm text-red-400">{error}</p>}
 					</div>
 				</div>
 

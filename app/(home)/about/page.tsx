@@ -9,7 +9,7 @@ export default function AboutPage() {
 				<h1 className="text-4xl font-bold tracking-tight mb-4">About Us</h1>
 				<p className="text-xl text-muted-foreground">
 					Learn about our mission, vision, and the team behind ODERA HELPING
-					HAND FOUNDATION.
+					HANDS FOUNDATION.
 				</p>
 			</div>
 
@@ -84,7 +84,7 @@ export default function AboutPage() {
 							name: "Dr. Odera Johnson",
 							role: "Founder & Executive Director",
 							bio: "Dr. Odera has over 20 years of experience in humanitarian work and community development.",
-							image: "/placeholder.svg?height=400&width=400",
+							image: "/headodera.jpg",
 						},
 						{
 							name: "Sarah Mwangi",
@@ -96,24 +96,6 @@ export default function AboutPage() {
 							name: "Michael Okonkwo",
 							role: "Director of Operations",
 							bio: "Michael manages the day-to-day operations and ensures efficient resource allocation.",
-							image: "/placeholder.svg?height=400&width=400",
-						},
-						{
-							name: "Dr. Amina Patel",
-							role: "Healthcare Program Lead",
-							bio: "Dr. Amina leads our healthcare initiatives and brings extensive medical expertise.",
-							image: "/placeholder.svg?height=400&width=400",
-						},
-						{
-							name: "Prof. David Ngugi",
-							role: "Education Program Lead",
-							bio: "Prof. David develops and implements our educational programs and initiatives.",
-							image: "/placeholder.svg?height=400&width=400",
-						},
-						{
-							name: "Grace Akinyi",
-							role: "Community Outreach Coordinator",
-							bio: "Grace coordinates our community engagement efforts and builds local partnerships.",
 							image: "/placeholder.svg?height=400&width=400",
 						},
 					].map((member, index) => (
@@ -136,7 +118,7 @@ export default function AboutPage() {
 				</div>
 			</div>
 
-			<div className="mb-16">
+			{/* <div className="mb-16">
 				<h2 className="text-3xl font-bold tracking-tight text-center mb-8">
 					Our Partners
 				</h2>
@@ -155,7 +137,7 @@ export default function AboutPage() {
 						</div>
 					))}
 				</div>
-			</div>
+			</div> */}
 		</div>
 	);
 }

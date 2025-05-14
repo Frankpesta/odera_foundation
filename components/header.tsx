@@ -8,6 +8,7 @@ import { ThemeToggle } from "@/components/mode-toggle";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
 import anime from "animejs";
+import Image from "next/image";
 
 const navItems = [
 	{ name: "Home", href: "/" },
@@ -52,7 +53,13 @@ export default function Header() {
 			}`}>
 			<div className="container flex h-16 items-center justify-between px-4">
 				<Link href="/" className="flex items-center space-x-2">
-					<span className="text-xl font-bold text-emerald-600">ODERA</span>
+					<Image
+						src={"/oderalogo.jpg"}
+						alt="Odera Logo"
+						width={50}
+						height={30}
+						objectFit="contain"
+					/>
 				</Link>
 
 				<nav className="hidden md:flex items-center space-x-6">

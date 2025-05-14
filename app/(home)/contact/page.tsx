@@ -1,7 +1,5 @@
 "use client";
 
-import type React from "react";
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -15,30 +13,46 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { MapPin, Phone, Mail, Clock } from "lucide-react";
-import { contactActions } from "@/actions/contact.actions";
+import { createContactSubmission } from "@/actions/contact.actions";
 
 export default function ContactPage() {
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [isSuccess, setIsSuccess] = useState(false);
+	const [error, setError] = useState<string | null>(null);
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 		setIsSubmitting(true);
+		setError(null);
 
-		// Simulate API call
-		setTimeout(() => {
-			setIsSubmitting(false);
+		const form = e.target as HTMLFormElement;
+		const formData = new FormData(form);
+
+		try {
+			const submission = {
+				firstName: formData.get("first-name") as string,
+				lastName: formData.get("last-name") as string,
+				email: formData.get("email") as string,
+				subject: formData.get("subject") as string,
+				message: formData.get("message") as string,
+				phone: (formData.get("phone") as string) || undefined,
+			};
+
+			await createContactSubmission(submission);
+
 			setIsSuccess(true);
-
-			// Reset form
-			const form = e.target as HTMLFormElement;
 			form.reset();
 
 			// Reset success message after 5 seconds
 			setTimeout(() => {
 				setIsSuccess(false);
 			}, 5000);
-		}, 1500);
+		} catch (err) {
+			setError("Failed to submit form. Please try again later.");
+			console.error("Form submission error:", err);
+		} finally {
+			setIsSubmitting(false);
+		}
 	};
 
 	return (
@@ -64,24 +78,33 @@ export default function ContactPage() {
 							<div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
 								<div className="space-y-2">
 									<Label htmlFor="first-name">First Name</Label>
-									<Input id="first-name" required />
+									<Input id="first-name" name="first-name" required />
 								</div>
 								<div className="space-y-2">
 									<Label htmlFor="last-name">Last Name</Label>
-									<Input id="last-name" required />
+									<Input id="last-name" name="last-name" required />
 								</div>
 							</div>
 							<div className="space-y-2">
 								<Label htmlFor="email">Email</Label>
-								<Input id="email" type="email" required />
+								<Input id="email" name="email" type="email" required />
+							</div>
+							<div className="space-y-2">
+								<Label htmlFor="phone">Phone Number</Label>
+								<Input id="phone" name="phone" type="tel" />
 							</div>
 							<div className="space-y-2">
 								<Label htmlFor="subject">Subject</Label>
-								<Input id="subject" required />
+								<Input id="subject" name="subject" required />
 							</div>
 							<div className="space-y-2">
 								<Label htmlFor="message">Message</Label>
-								<Textarea id="message" className="min-h-[120px]" required />
+								<Textarea
+									id="message"
+									name="message"
+									className="min-h-[120px]"
+									required
+								/>
 							</div>
 							<Button
 								type="submit"
@@ -94,10 +117,16 @@ export default function ContactPage() {
 									Thank you for your message! We'll get back to you soon.
 								</div>
 							)}
+							{error && (
+								<div className="mt-4 p-3 bg-red-50 text-red-700 dark:bg-red-900 dark:text-red-200 rounded-md text-center">
+									{error}
+								</div>
+							)}
 						</form>
 					</CardContent>
 				</Card>
 
+				{/* The rest of your contact information and social media sections remain unchanged */}
 				<div className="space-y-8">
 					<div>
 						<h2 className="text-2xl font-bold mb-6">Contact Information</h2>
@@ -115,7 +144,7 @@ export default function ContactPage() {
 								<Phone className="h-5 w-5 mr-3 mt-0.5 text-emerald-600" />
 								<div>
 									<h3 className="font-semibold">Phone</h3>
-									<p className="text-muted-foreground">+1 (234) 567-8901</p>
+									<p className="text-muted-foreground">+234 803 569 6810</p>
 								</div>
 							</div>
 							<div className="flex items-start">
@@ -225,10 +254,10 @@ export default function ContactPage() {
 			<div className="mt-16 max-w-5xl mx-auto h-[400px] rounded-lg overflow-hidden shadow-lg">
 				{/* This would be replaced with an actual Google Maps embed */}
 				{/* <div className="w-full h-full bg-muted flex items-center justify-center">
-					<p className="text-muted-foreground">
-						Google Maps Embed Would Go Here
-					</p>
-				</div> */}
+          <p className="text-muted-foreground">
+            Google Maps Embed Would Go Here
+          </p>
+        </div> */}
 			</div>
 		</div>
 	);
