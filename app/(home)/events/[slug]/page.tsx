@@ -24,9 +24,10 @@ export async function generateStaticParams() {
 export async function generateMetadata({
 	params,
 }: {
-	params: { slug: string };
+	params: Promise<{ slug: string }>; // Changed to Promise
 }): Promise<Metadata> {
-	const event = await getEventBySlug(params.slug);
+	const { slug } = await params; // Await the Promise
+	const event = await getEventBySlug(slug);
 
 	if (!event) {
 		return {
@@ -43,13 +44,13 @@ export async function generateMetadata({
 			title: event.title,
 			description: event.description.substring(0, 160),
 			type: "article",
-			publishedTime: event.created_at.toString(),
+			publishedTime: (event.created_at ?? new Date()).toString(),
 			url: `https://oderahelpinghandsfoundation.org/events/${event.slug}`,
 			images: [
 				{
 					url:
 						event.images && event.images.length > 0
-							? event.images[0].image_url
+							? event.images[0].imageUrl
 							: event.image_url ||
 							  "https://oderahelpinghandsfoundation.org/og-image.jpg",
 					width: 1200,
@@ -64,7 +65,7 @@ export async function generateMetadata({
 			description: event.description.substring(0, 160),
 			images: [
 				event.images && event.images.length > 0
-					? event.images[0].image_url
+					? event.images[0].imageUrl
 					: event.image_url ||
 					  "https://oderahelpinghandsfoundation.org/og-image.jpg",
 			],
@@ -72,12 +73,13 @@ export async function generateMetadata({
 	};
 }
 
-export default async function EventPage({
-	params,
-}: {
-	params: { slug: string };
-}) {
-	const event = await getEventBySlug(params.slug);
+type EventPageProps = {
+	params: Promise<{ slug: string }>; // Changed to Promise
+};
+
+export default async function EventPage({ params }: EventPageProps) {
+	const { slug } = await params; // Await the Promise
+	const event = await getEventBySlug(slug);
 
 	if (!event) {
 		notFound();
@@ -89,12 +91,33 @@ export default async function EventPage({
 	// Get featured image
 	const featuredImage =
 		event.images && event.images.length > 0
-			? event.images.find((img) => img.is_featured) || event.images[0]
+			? event.images.find((img) => img.isFeatured) || event.images[0]
 			: null;
 
 	return (
 		<>
-			<JsonLd event={event} />
+			<JsonLd
+				event={{
+					id: event.id,
+					title: event.title,
+					slug: event.slug,
+					description: event.description,
+					content: event.content,
+					location: event.location,
+					eventDate: new Date(event.event_date),
+					eventEndDate: event.event_end_date
+						? new Date(event.event_end_date)
+						: null,
+					imageUrl: event.image_url,
+					createdAt: event.created_at ? new Date(event.created_at) : null,
+					updatedAt: event.updated_at ? new Date(event.updated_at) : null,
+					status: event.status,
+					seoMetadata: event.seo_metadata,
+					categoryId: event.category_id,
+					isFeatured: event.is_featured,
+					createdBy: event.created_by,
+				}}
+			/>
 
 			<div className="container px-4 py-12">
 				<div className="max-w-4xl mx-auto">
@@ -108,7 +131,7 @@ export default async function EventPage({
 					<div className="relative h-[400px] rounded-lg overflow-hidden mb-8">
 						<Image
 							src={
-								featuredImage?.image_url ||
+								featuredImage?.imageUrl ||
 								event.image_url ||
 								"/placeholder.svg?height=800&width=1200"
 							}
