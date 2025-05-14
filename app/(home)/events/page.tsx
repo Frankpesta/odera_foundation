@@ -14,9 +14,10 @@ export const dynamic = "force-dynamic";
 export default async function EventsPage({
 	searchParams,
 }: {
-	searchParams: { tab?: string };
+	searchParams: Promise<{ tab?: string }>;
 }) {
-	const activeTab = searchParams.tab || "upcoming";
+	const resolvedParams = await searchParams;
+	const activeTab = resolvedParams.tab || "upcoming";
 
 	return (
 		<div className="container px-4 py-12">
