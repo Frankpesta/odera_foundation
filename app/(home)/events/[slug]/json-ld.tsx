@@ -1,10 +1,10 @@
-import type { Event } from "@/actions/events";
+import type { EventType } from "@/actions/events";
 
-export function JsonLd({ event }: { event: Event }) {
+export function JsonLd({ event }: { event: EventType }) {
 	// Get featured image
 	const featuredImage =
-		event.images && event.images.length > 0
-			? event.images.find((img) => img.is_featured) || event.images[0]
+		Array.isArray(event.imageUrl) && event.imageUrl.length > 0
+			? event.imageUrl.find((img) => img.is_featured) || event.imageUrl[0]
 			: null;
 
 	const jsonLd = {
@@ -12,8 +12,8 @@ export function JsonLd({ event }: { event: Event }) {
 		"@type": "Event",
 		name: event.title,
 		description: event.description,
-		startDate: event.event_date,
-		endDate: event.event_end_date || event.event_date,
+		startDate: event.eventDate,
+		endDate: event.eventEndDate || event.eventEndDate,
 		location: {
 			"@type": "Place",
 			name: event.location,
@@ -23,8 +23,8 @@ export function JsonLd({ event }: { event: Event }) {
 			},
 		},
 		image:
-			featuredImage?.image_url ||
-			event.image_url ||
+			featuredImage?.imageUrl ||
+			event.imageUrl ||
 			"https://oderahelpinghandsfoundation.org/og-image.jpg",
 		organizer: {
 			"@type": "Organization",
@@ -38,7 +38,7 @@ export function JsonLd({ event }: { event: Event }) {
 			availability: "https://schema.org/InStock",
 			price: "0",
 			priceCurrency: "USD",
-			validFrom: event.created_at,
+			validFrom: event.createdAt,
 		},
 	};
 

@@ -72,11 +72,11 @@ export async function generateMetadata({
 	};
 }
 
-export default async function EventPage({
-	params,
-}: {
+type EventPageProps = {
 	params: { slug: string };
-}) {
+};
+
+export default async function EventPage({ params }: EventPageProps) {
 	const event = await getEventBySlug(params.slug);
 
 	if (!event) {
@@ -94,7 +94,28 @@ export default async function EventPage({
 
 	return (
 		<>
-			<JsonLd event={event} />
+			<JsonLd
+				event={{
+					id: event.id,
+					title: event.title,
+					slug: event.slug,
+					description: event.description,
+					content: event.content,
+					location: event.location,
+					eventDate: new Date(event.event_date),
+					eventEndDate: event.event_end_date
+						? new Date(event.event_end_date)
+						: null,
+					imageUrl: event.image_url,
+					createdAt: event.created_at ? new Date(event.created_at) : null,
+					updatedAt: event.updated_at ? new Date(event.updated_at) : null,
+					status: event.status,
+					seoMetadata: event.seo_metadata,
+					categoryId: event.category_id,
+					isFeatured: event.is_featured,
+					createdBy: event.created_by,
+				}}
+			/>
 
 			<div className="container px-4 py-12">
 				<div className="max-w-4xl mx-auto">

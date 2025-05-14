@@ -6,10 +6,10 @@ import { useState } from "react";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import type { EventImage } from "@/actions/events";
+import type { EventImageType } from "@/actions/events";
 
 interface EventImageGalleryProps {
-	images: EventImage[];
+	images: EventImageType[];
 }
 
 export default function EventImageGallery({ images }: EventImageGalleryProps) {
@@ -58,8 +58,8 @@ export default function EventImageGallery({ images }: EventImageGalleryProps) {
 						className="relative aspect-square rounded-md overflow-hidden cursor-pointer"
 						onClick={() => openLightbox(index)}>
 						<Image
-							src={image.image_url || "/placeholder.svg"}
-							alt={image.alt_text || `Event image ${index + 1}`}
+							src={image.imageUrl || "/placeholder.svg"}
+							alt={image.altText || `Event image ${index + 1}`}
 							fill
 							className="object-cover hover:scale-105 transition-transform duration-300"
 						/>
@@ -98,9 +98,9 @@ export default function EventImageGallery({ images }: EventImageGalleryProps) {
 						className="relative h-[80vh] w-[80vw] md:w-[60vw]"
 						onClick={(e) => e.stopPropagation()}>
 						<Image
-							src={images[selectedIndex].image_url || "/placeholder.svg"}
+							src={images[selectedIndex].imageUrl || "/placeholder.svg"}
 							alt={
-								images[selectedIndex].alt_text ||
+								images[selectedIndex].altText ||
 								`Event image ${selectedIndex + 1}`
 							}
 							fill
