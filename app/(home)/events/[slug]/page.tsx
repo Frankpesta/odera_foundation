@@ -24,9 +24,9 @@ export async function generateStaticParams() {
 export async function generateMetadata({
 	params,
 }: {
-	params: { slug: string };
+	params: Promise<{ slug: string }>; // Changed to Promise
 }): Promise<Metadata> {
-	const slug = params.slug;
+	const { slug } = await params; // Await the Promise
 	const event = await getEventBySlug(slug);
 
 	if (!event) {
@@ -74,11 +74,11 @@ export async function generateMetadata({
 }
 
 type EventPageProps = {
-	params: { slug: string };
+	params: Promise<{ slug: string }>; // Changed to Promise
 };
 
 export default async function EventPage({ params }: EventPageProps) {
-	const slug = params.slug;
+	const { slug } = await params; // Await the Promise
 	const event = await getEventBySlug(slug);
 
 	if (!event) {
