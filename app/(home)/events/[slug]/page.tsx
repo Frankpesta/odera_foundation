@@ -43,13 +43,13 @@ export async function generateMetadata({
 			title: event.title,
 			description: event.description.substring(0, 160),
 			type: "article",
-			publishedTime: event.created_at.toString(),
+			publishedTime: (event.created_at ?? new Date()).toString(),
 			url: `https://oderahelpinghandsfoundation.org/events/${event.slug}`,
 			images: [
 				{
 					url:
 						event.images && event.images.length > 0
-							? event.images[0].image_url
+							? event.images[0].imageUrl
 							: event.image_url ||
 							  "https://oderahelpinghandsfoundation.org/og-image.jpg",
 					width: 1200,
@@ -64,7 +64,7 @@ export async function generateMetadata({
 			description: event.description.substring(0, 160),
 			images: [
 				event.images && event.images.length > 0
-					? event.images[0].image_url
+					? event.images[0].imageUrl
 					: event.image_url ||
 					  "https://oderahelpinghandsfoundation.org/og-image.jpg",
 			],
@@ -89,7 +89,7 @@ export default async function EventPage({
 	// Get featured image
 	const featuredImage =
 		event.images && event.images.length > 0
-			? event.images.find((img) => img.is_featured) || event.images[0]
+			? event.images.find((img) => img.isFeatured) || event.images[0]
 			: null;
 
 	return (
@@ -108,7 +108,7 @@ export default async function EventPage({
 					<div className="relative h-[400px] rounded-lg overflow-hidden mb-8">
 						<Image
 							src={
-								featuredImage?.image_url ||
+								featuredImage?.imageUrl ||
 								event.image_url ||
 								"/placeholder.svg?height=800&width=1200"
 							}
