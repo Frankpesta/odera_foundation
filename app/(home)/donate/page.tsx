@@ -328,7 +328,7 @@ export default function DonatePage() {
 						<p className="text-sm">
 							<strong>Email:</strong> donations@oderahelpinghand.org
 							<br />
-							<strong>Phone:</strong> +234 000 000 0000
+							<strong>Phone:</strong> +234 704 335 6270
 						</p>
 					</div>
 				</div>
