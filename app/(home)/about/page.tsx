@@ -58,7 +58,7 @@ export default function AboutPage() {
 					className="mt-6 p-6 bg-muted/30 rounded-lg">
 					<h2 className="text-2xl font-bold mb-4">Our History</h2>
 					<p className="mb-4">
-						Odera Helping Hands Foundation was established in 2008 by a group of
+						Odera Helping Hands Foundation was established in 2024 by a group of
 						passionate individuals who witnessed the challenges faced by
 						vulnerable communities and were determined to make a difference.
 						What began as a small initiative to provide basic necessities to a
@@ -81,21 +81,15 @@ export default function AboutPage() {
 				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
 					{[
 						{
-							name: "Dr. Odera Johnson",
+							name: "Chief Samson Chukwu Nnamani",
 							role: "Founder & Executive Director",
-							bio: "Dr. Odera has over 20 years of experience in humanitarian work and community development.",
+							bio: "Chief Samson has over 20 years of experience in humanitarian work and community development.",
 							image: "/headodera.jpg",
 						},
 						{
-							name: "Sarah Mwangi",
-							role: "Director of Programs",
-							bio: "Sarah oversees all our programs and ensures they align with our mission and vision.",
-							image: "/placeholder.svg?height=400&width=400",
-						},
-						{
-							name: "Michael Okonkwo",
-							role: "Director of Operations",
-							bio: "Michael manages the day-to-day operations and ensures efficient resource allocation.",
+							name: "Ebube Nebo JP",
+							role: "Director of Programs and Operations",
+							bio: "JP oversees all our programs and ensures they align with our mission and vision.",
 							image: "/placeholder.svg?height=400&width=400",
 						},
 					].map((member, index) => (
