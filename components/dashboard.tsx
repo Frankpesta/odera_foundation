@@ -138,7 +138,7 @@ export default function DashboardPage({ stats }: { stats: DashboardStats }) {
 			</div>
 
 			{/* Recent Events */}
-			<div ref={recentRef}>
+			{/* <div ref={recentRef}>
 				<Card>
 					<CardHeader className="flex flex-row items-center justify-between">
 						<CardTitle>Recent Events</CardTitle>
@@ -148,7 +148,7 @@ export default function DashboardPage({ stats }: { stats: DashboardStats }) {
 						<RecentEventsTable />
 					</CardContent>
 				</Card>
-			</div>
+			</div> */}
 		</div>
 	);
 }
