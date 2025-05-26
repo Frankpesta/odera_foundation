@@ -206,8 +206,8 @@ export default function Home() {
 							<Image
 								src={"/poverty2.jpg"}
 								alt="poverty"
-								width={200}
-								height={200}
+								width={1000}
+								height={1000}
 								className="object-cover rounded-lg w-full h-full -mt-6"
 							/>
 
@@ -229,8 +229,8 @@ export default function Home() {
 							<Image
 								src={"/graduates.jpg"}
 								alt="poverty"
-								width={200}
-								height={200}
+								width={1000}
+								height={1000}
 								className="object-cover rounded-lg w-full h-full -mt-6"
 							/>
 
@@ -252,8 +252,8 @@ export default function Home() {
 							<Image
 								src={"/doctor.jpg"}
 								alt="poverty"
-								width={200}
-								height={200}
+								width={1000}
+								height={1000}
 								className="object-cover rounded-lg w-full h-full -mt-6"
 							/>
 
@@ -275,8 +275,8 @@ export default function Home() {
 							<Image
 								src={"/comdev.jpg"}
 								alt="poverty"
-								width={200}
-								height={200}
+								width={1000}
+								height={1000}
 								className="object-cover rounded-lg w-full h-full -mt-6"
 							/>
 
@@ -300,8 +300,8 @@ export default function Home() {
 							<Image
 								src={"/env.jpg"}
 								alt="poverty"
-								width={200}
-								height={200}
+								width={1000}
+								height={1000}
 								className="object-cover rounded-lg w-full h-full -mt-6"
 							/>
 
@@ -325,8 +325,8 @@ export default function Home() {
 							<Image
 								src="/upcoming.jpg"
 								alt="Upcoming Events"
-								width={200}
-								height={250}
+								width={1000}
+								height={1000}
 								className="object-cover rounded-lg w-full h-full -mt-6"
 							/>
 
