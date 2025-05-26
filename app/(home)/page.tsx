@@ -203,9 +203,14 @@ export default function Home() {
 					</h2>
 					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
 						<Card className="animate-item overflow-hidden">
-							<div className="h-48 bg-emerald-100 dark:bg-emerald-950 flex items-center justify-center">
-								<Heart className="h-16 w-16 text-emerald-600" />
-							</div>
+							<Image
+								src={"/poverty2.jpg"}
+								alt="poverty"
+								width={200}
+								height={200}
+								className="object-cover rounded-lg w-full h-full -mt-6"
+							/>
+
 							<CardContent className="p-6">
 								<h3 className="text-xl font-bold mb-2">Alleviating Poverty</h3>
 								<p className="mb-4">
@@ -213,7 +218,7 @@ export default function Home() {
 									to individuals and communities in need.
 								</p>
 								<Button asChild variant="link" className="p-0 text-emerald-600">
-									<Link href="/our-work/poverty">
+									<Link href="/our-work">
 										Learn More <ArrowRight className="ml-2 h-4 w-4" />
 									</Link>
 								</Button>
@@ -221,9 +226,14 @@ export default function Home() {
 						</Card>
 
 						<Card className="animate-item overflow-hidden">
-							<div className="h-48 bg-emerald-100 dark:bg-emerald-950 flex items-center justify-center">
-								<BookOpen className="h-16 w-16 text-emerald-600" />
-							</div>
+							<Image
+								src={"/graduates.jpg"}
+								alt="poverty"
+								width={200}
+								height={200}
+								className="object-cover rounded-lg w-full h-full -mt-6"
+							/>
+
 							<CardContent className="p-6">
 								<h3 className="text-xl font-bold mb-2">Promoting Education</h3>
 								<p className="mb-4">
@@ -231,7 +241,7 @@ export default function Home() {
 									educational materials, and literacy programs.
 								</p>
 								<Button asChild variant="link" className="p-0 text-emerald-600">
-									<Link href="/our-work/education">
+									<Link href="/our-work">
 										Learn More <ArrowRight className="ml-2 h-4 w-4" />
 									</Link>
 								</Button>
@@ -239,9 +249,14 @@ export default function Home() {
 						</Card>
 
 						<Card className="animate-item overflow-hidden">
-							<div className="h-48 bg-emerald-100 dark:bg-emerald-950 flex items-center justify-center">
-								<Stethoscope className="h-16 w-16 text-emerald-600" />
-							</div>
+							<Image
+								src={"/doctor.jpg"}
+								alt="poverty"
+								width={200}
+								height={200}
+								className="object-cover rounded-lg w-full h-full -mt-6"
+							/>
+
 							<CardContent className="p-6">
 								<h3 className="text-xl font-bold mb-2">Advancing Healthcare</h3>
 								<p className="mb-4">
@@ -249,7 +264,7 @@ export default function Home() {
 									those with limited resources.
 								</p>
 								<Button asChild variant="link" className="p-0 text-emerald-600">
-									<Link href="/our-work/healthcare">
+									<Link href="/our-work">
 										Learn More <ArrowRight className="ml-2 h-4 w-4" />
 									</Link>
 								</Button>
@@ -257,9 +272,14 @@ export default function Home() {
 						</Card>
 
 						<Card className="animate-item overflow-hidden">
-							<div className="h-48 bg-emerald-100 dark:bg-emerald-950 flex items-center justify-center">
-								<Users className="h-16 w-16 text-emerald-600" />
-							</div>
+							<Image
+								src={"/comdev.jpg"}
+								alt="poverty"
+								width={200}
+								height={200}
+								className="object-cover rounded-lg w-full h-full -mt-6"
+							/>
+
 							<CardContent className="p-6">
 								<h3 className="text-xl font-bold mb-2">
 									Community Development
@@ -269,7 +289,7 @@ export default function Home() {
 									training, infrastructure, and cultural enrichment.
 								</p>
 								<Button asChild variant="link" className="p-0 text-emerald-600">
-									<Link href="/our-work/community">
+									<Link href="/our-work">
 										Learn More <ArrowRight className="ml-2 h-4 w-4" />
 									</Link>
 								</Button>
@@ -277,9 +297,14 @@ export default function Home() {
 						</Card>
 
 						<Card className="animate-item overflow-hidden">
-							<div className="h-48 bg-emerald-100 dark:bg-emerald-950 flex items-center justify-center">
-								<Leaf className="h-16 w-16 text-emerald-600" />
-							</div>
+							<Image
+								src={"/env.jpg"}
+								alt="poverty"
+								width={200}
+								height={200}
+								className="object-cover rounded-lg w-full h-full -mt-6"
+							/>
+
 							<CardContent className="p-6">
 								<h3 className="text-xl font-bold mb-2">
 									Environmental Protection
@@ -289,7 +314,7 @@ export default function Home() {
 									practices through research and conservation projects.
 								</p>
 								<Button asChild variant="link" className="p-0 text-emerald-600">
-									<Link href="/our-work/environment">
+									<Link href="/our-work">
 										Learn More <ArrowRight className="ml-2 h-4 w-4" />
 									</Link>
 								</Button>
@@ -297,15 +322,14 @@ export default function Home() {
 						</Card>
 
 						<Card className="animate-item overflow-hidden">
-							<div className="h-48 bg-emerald-100 dark:bg-emerald-950 flex items-center justify-center">
-								<Image
-									src="/placeholder.svg?height=400&width=600"
-									alt="Upcoming Events"
-									width={200}
-									height={150}
-									className="object-cover"
-								/>
-							</div>
+							<Image
+								src="/upcoming.jpg"
+								alt="Upcoming Events"
+								width={200}
+								height={250}
+								className="object-cover rounded-lg w-full h-full -mt-6"
+							/>
+
 							<CardContent className="p-6">
 								<h3 className="text-xl font-bold mb-2">Upcoming Events</h3>
 								<p className="mb-4">
