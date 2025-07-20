@@ -125,7 +125,7 @@ export default function UltimateHero() {
 					/>
 				</motion.div>
 
-				<motion.div
+				{/* <motion.div
 					className="flex flex-wrap justify-center gap-6"
 					variants={buttonVariants}
 					initial="hidden"
@@ -141,7 +141,7 @@ export default function UltimateHero() {
 							</Link>
 						</Button>
 					</motion.div>
-				</motion.div>
+				</motion.div> */}
 			</div>
 
 			{/* Scroll Indicator */}

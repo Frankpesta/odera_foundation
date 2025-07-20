@@ -5,7 +5,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 	const baseUrl = "https://oderahelpinghandsfoundation.org";
 
 	// Get all published events
-	const events = await getEvents({ status: "published" });
+	const events = await getEvents({ status: "completed" });
 
 	// Static routes
 	const routes = [
