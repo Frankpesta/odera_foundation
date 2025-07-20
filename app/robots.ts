@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
 			allow: "/",
 			disallow: ["/admin/", "/api/"],
 		},
-		sitemap: "https://oderahelpinghandsfoundation.org/sitemap.xml",
+		sitemap: "https://oderahelpinghandsfoundation.org/sitemap.ts",
 	};
 }
